@@ -1,0 +1,17 @@
+# Lab 14 — Portfolio Baselines
+
+## Portfolio Results
+
+| Portfolio | Expected Return | Volatility | Reserve-Eligible | Meets Objective? |
+
+| Benchmark | 6.80% | 10.46% | 0.0% | Yes |
+| Equal Weight | 5.20% | 5.21% | 50.0% | No |
+| Inverse Volatility | 3.77% | 1.05% | 90.3% | No |
+
+## Validation Tests
+
+1. All three portfolios matched the known answers.
+2. Increasing the IG bond–equity correlation from 0.25 to 0.50 increased benchmark volatility from 10.46% to 11.00%.
+3. Changing the correlation to 1.3 caused the program to raise a ValueError, proving it rejects invalid inputs.
+4. The original correlation values were restored.
+5. Candidate E was added to mandate.py and failed the 3.0% reserve requirement.
