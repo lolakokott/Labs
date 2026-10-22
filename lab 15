@@ -1,0 +1,108 @@
+# Lab 15 — Portfolio Architecture
+
+## Mermaid Flowchart
+
+```mermaid
+flowchart TD
+    %% 1. Data Sources & Inputs
+    subgraph INP ["1. Inputs & Data Ingestion"]
+        CSV["prices.csv (Historical Prices)"] --> EST["estimate_from_csv(csv_file, last_36)"]
+        EST --> RET_VOL["Estimate Annualized Returns, Volatilities & Correlation Matrix"]
+        STATIC["Predefined Inputs (assets dict, correlations, targets)"]
+    end
+
+    %% 2. Validation & Covariance
+    subgraph VAL ["2. Validation & Covariance Construction"]
+        CORR["Correlation Matrix Input"]
+        V_CHECK{"validate_correlations(matrix)"}
+        V_FAIL["Raise ValueError (Dimensions, Range, Symmetry, or Diagonal)"]
+        V_PASS["Valid Correlation Matrix"]
+        COV["build_covariance(matrix): Cov_ij = Corr_ij * Vol_i * Vol_j"]
+
+        CORR --> V_CHECK
+        V_CHECK -- "Invalid" --> V_FAIL
+        V_CHECK -- "Valid" --> V_PASS
+        V_PASS --> COV
+    end
+
+    RET_VOL --> CORR
+    STATIC --> CORR
+
+    %% 3. Portfolio Allocation Strategies
+    subgraph WEIGHTS ["3. Portfolio Allocation Strategies"]
+        subgraph BASE ["Baseline Strategies"]
+            BM["benchmark_weights(): 40% IG Bonds, 60% Global Equity"]
+            EW["equal_weights(): 1/N Equal Allocation"]
+            IV["inverse_volatility_weights(): Proportional to 1/Vol"]
+        end
+
+        subgraph OPT ["Optimization: find_lowest_risk_mix()"]
+            GRID["Grid Search: All 5% Increment Combinations (Sum = 100%)"]
+            C_RET{"Check Return: Return >= Target?"}
+            C_RES{"Check Reserve: Reserve >= Minimum Reserve?"}
+            REJ["Reject Infeasible Candidate Mix"]
+            CALC_CAND["Compute Candidate Portfolio Variance & Volatility"]
+            MIN_VOL["Track Candidate with Lowest Volatility"]
+
+            GRID --> C_RET
+            C_RET -- "No" --> REJ
+            C_RET -- "Yes" --> C_RES
+            C_RES -- "No" --> REJ
+            C_RES -- "Yes" --> CALC_CAND
+            CALC_CAND --> MIN_VOL
+        end
+    end
+
+    COV --> CALC_CAND
+
+    %% 4. Metrics Engine
+    subgraph METRICS ["4. Portfolio Metrics Engine"]
+        F_RET["portfolio_return(weights): Sum(w_i * r_i)"]
+        F_VOL["portfolio_volatility(weights, Cov): sqrt(w * Cov * w^T)"]
+        F_RES["portfolio_reserve(weights): Sum(w_i) for reserve-eligible assets"]
+    end
+
+    BASE --> METRICS
+    COV --> F_VOL
+
+    %% 5. Evaluation & Output
+    subgraph OUT ["5. Evaluation & Output"]
+        OBJ_CHECK{"Expected Return >= objective_return?"}
+        PRINT["print_portfolio(): Formats Weights, Return, Volatility, Reserve %"]
+        PRINT_DEC["Display Objective Met: YES or NO"]
+        OPT_RES["Return Lowest-Risk Feasible Mix Dictionary"]
+
+        METRICS --> OBJ_CHECK
+        OBJ_CHECK --> PRINT
+        PRINT --> PRINT_DEC
+        MIN_VOL --> OPT_RES
+    end
+```
+
+### Investment Mandate
+
+The portfolio seeks an estimated annual return of at least 7% while minimizing volatility. The portfolio must maintain at least 10% in reserve-eligible assets, with BIL qualifying as the cash reserve. All positions must be long-only, and portfolio weights must total 100%.
+
+### Portfolio Stability Results
+
+| Fund | Full Period | Last 36 Months |
+|---|---:|---:|
+| VT | 5% | 10% |
+| BIL | 70% | 85% |
+| QQQ | 25% | 5% |
+| IEF | 0% | 0% |
+| Estimated Return | 7.12% | 7.06% |
+| Volatility | 5.97% | 1.99% |
+| Reserve-Eligible Weight | 70% | 85% |
+
+**Largest weight change:** 20 percentage points (QQQ).
+
+### Interpretation
+
+Both portfolios meet the 7% estimated return objective and 10% reserve requirement. However, the allocation changes considerably when the estimation period is reduced to 36 months. QQQ decreases from 25% to 5%, while BIL increases from 70% to 85%.
+
+This demonstrates that the portfolio optimization is sensitive to historical estimates. Even though both scenarios meet the mandate, their allocations differ substantially, suggesting that the initial portfolio should not automatically be considered stable or optimal for future investment decisions.
+
+### Investment Decision
+
+**Pilot, not adopt.** I would use the portfolio as a starting point for further analysis rather than immediately implementing the allocation. The 20-percentage-point change in QQQ exposure demonstrates estimation risk. I would reconsider adoption after testing additional assumptions and confirming that the portfolio remains reasonably stable under alternative return estimates.
