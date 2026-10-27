@@ -1,0 +1,49 @@
+# Lab 16 — Provenance Gate Verification
+
+## 1. Known-Answer Check
+**Decision Date:** March 31, 2026
+
+All four filtering rules produced the expected results:
+
+- Missing ticker: Row 11 quarantined
+- Exact duplicate: Row 7 removed
+- Published after decision date: Rows 3, 8, 10 removed
+- Older revision: Row 2 removed
+
+**Remaining rows:** 1, 4, 5, 6, 9, 12
+
+## 2. Signal Verification
+
+| Ticker | As-of Signal | Naive Signal |
+|---|---|---|
+| AAA | +1.98% | +5.83% |
+| BBB | -1.02% | -5.15% |
+| CCC | +0.91% | +1.82% |
+
+All signals matched the provided known answers.
+
+## 3. Decision-Date Stress Test
+**Decision Date:** April 15, 2026
+
+After changing the decision date, all three as-of signals matched their respective naive signals:
+
+- AAA: +5.83%
+- BBB: -5.15%
+- CCC: +1.82%
+
+This confirms the filter excludes future publications as intended.
+
+## 4. Sanity Check
+
+The following rows produce negative yields under the formula `100 / price - 1`:
+
+- Row 1: -0.99%
+- Row 4: -2.91%
+- Row 9: -9.09%
+- Row 12: -9.91%
+
+These observations pass the provenance gate but would be flagged by an additional sanity check.
+
+## Conclusion
+
+The provenance gate passed the known-answer and decision-date tests. The results demonstrate why publication dates and revisions must be considered to avoid look-ahead bias in financial analysis.
