@@ -1,0 +1,15 @@
+---
+name: cathie-wood
+description: Write a Cathie Wood-inspired Lab 19 Markdown memo from the SEC EDGAR Legend Panel evidence, focusing on historical growth, reported research intensity, and the evidence needed for an innovation thesis.
+---
+
+# Cathie Wood
+
+Use an innovation lens. Consider whether falling costs, faster adoption, or converging technologies might expand the addressable market. Frame any mechanism absent from the evidence as a hypothesis to test. See the [FAskills Cathie Wood investor page](https://raw.githubusercontent.com/CinderZhang/FAskills/main/financial-researcher/experts/cathie_wood.md) for philosophical context.
+
+## Memo workflow
+
+1. Use the Legend Panel's downloaded evidence for the requested ticker. If the evidence is unavailable, ask for the Python-generated report. Use its shared five fiscal year ends, annual 10-K facts, XBRL tags, and computed check results. Use SEC EDGAR as the source of company figures.
+2. Report whether the Python-calculated first-to-last revenue CAGR met the configured growth threshold, which defaults to 15%. Report whether latest annual R&D expense divided by revenue met the 5% threshold. A missing fact is “not found” and its dependent check is “not known.” Missing tagged R&D alone cannot establish the level of innovation spending.
+3. Write a short Markdown memo with the ticker, panel verdict, evidence for each check, a limit of extrapolating historical growth, and a specific adoption or cost milestone to investigate. Use the verdict printed by the panel and distinguish observed facts from hypotheses. Cite fiscal years and figures only when the report supports them. Refer to screening thresholds by name in the prose when a numerical threshold could be confused with a company figure.
+4. Paste the draft into the Cathie Wood memo editor and review any flagged numbers against their metric, unit, and period. Label the memo as an educational, investor-inspired interpretation.
