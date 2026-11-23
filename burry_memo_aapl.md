@@ -1,25 +1,25 @@
-# Apple Inc. (AAPL) | Michael Burry–inspired investment memo
+# Apple Inc. (AAPL) | Buffett-inspired investment memo
 
-*Educational, investor-inspired interpretation.*
+Educational, investor-inspired interpretation.
 
-**Legend Panel verdict: Flags a forensic concern.** Apple failed both the cash-conversion and balance-sheet screens.
+Recommendation — Own the business. Apple passed all three Buffett checks. It earned high returns on reported equity, generated cash after capital spending in every fiscal year reviewed, and finished the period with higher owner earnings than it started with.
 
-## Cash conversion
+## Why Apple passed
 
-The panel requires operating cash flow to equal or exceed net income in every fiscal year reviewed. Apple fell short in the fiscal year ended September 27, 2025, when it reported operating cash flow of USD 111,482,000,000 against net income of USD 112,010,000,000. Operating cash flow exceeded net income in each of the other fiscal years in the evidence, including the latest year. The 2025 shortfall alone accounts for the failed screen. The annual totals leave its cause unresolved.
+| Buffett check | AAPL evidence |
+|---|---|
+| ROE of at least 15% every fiscal year | Passed. In fiscal-year order from 2022 through 2026, ROE was 196.96%, 156.08%, 164.59%, 151.91%, and 117.92%. |
+| Positive owner earnings every fiscal year | Passed. In the same order, owner earnings were USD 111,443,000,000, USD 99,584,000,000, USD 108,807,000,000, USD 98,767,000,000, and USD 136,056,000,000. |
+| Owner earnings increased from the first fiscal year to the last | Passed. Owner earnings rose from USD 111,443,000,000 in fiscal 2022 to USD 136,056,000,000 in fiscal 2026, with declines in fiscal 2023 and fiscal 2025. |
 
-XBRL tags used: `us-gaap:NetCashProvidedByUsedInOperatingActivities` and `us-gaap:NetIncomeLoss`.
+## Business strengths and limits of the screen
 
-## Balance-sheet exposure
+Apple’s most persuasive result is that operating cash flow covered reported capital expenditures every year reviewed. That consistency supports the case for a business that can fund its recorded capital spending from operations. The decline in ROE from the first year to the last warrants attention even though the lowest reading remained above the hurdle.
 
-At the September 26, 2026 fiscal year-end, Apple reported total liabilities of USD 292,455,000,000 and positive stockholders’ equity of USD 112,093,000,000. The panel’s resulting ratio of 2.61× exceeded its 2× ceiling. The numerator is total reported liabilities. The ratio measures their size relative to book equity, while the timing of cash payments requires a review of the liability disclosures.
+The panel divides net income by year-end book equity. A smaller equity base can raise ROE, so the ratio alone cannot establish the return Apple earns on all the capital it uses. The panel also defines owner earnings as operating cash flow minus reported capital expenditures. Working-capital timing can affect operating cash flow, and the calculation combines maintenance and expansion spending. The growth check compares endpoints, so it can pass despite weaker intervening years.
 
-XBRL tags used: `us-gaap:Liabilities` and `us-gaap:StockholdersEquity`.
+## What would change the verdict
 
-## Downside hypothesis and how to test it
+I would move Apple to Watch it if cash generation after capital spending weakened across successive filings or if the cash-flow reconciliation showed that the latest improvement depended heavily on temporary working-capital movements. I would move to Pass if operating cash flow repeatedly fell short of the capital spending needed to sustain the business. The next review should compare the cash-flow reconciliations and look for disclosures that distinguish maintenance spending from expansion spending.
 
-If operating cash flow falls below earnings again while substantial obligations come due, Apple could have less cash available after meeting those obligations than reported earnings alone would suggest.
-
-Start with the fiscal 2025 and 2026 10-K cash-flow reconciliations. Compare changes in receivables, inventory, and payables alongside noncash adjustments to see which items explain the shortfall and whether their effects reversed the following year. Then review the latest liability breakdown, debt maturity schedule, and available liquidity to assess how much cash Apple may need to cover near-term payments. The downside case would gain weight if the reconciliations show recurring cash drains and the liability disclosures show substantial payments approaching.
-
-Source: Lab 19 Legend Panel, `AAPL-panel-evidence.md`, based on SEC EDGAR annual financial facts.
+Source: Lab 19 Legend Panel, AAPL-panel-evidence.md, based on SEC EDGAR annual financial facts. ROE uses us-gaap:NetIncomeLoss and us-gaap:StockholdersEquity. Owner earnings use us-gaap:NetCashProvidedByUsedInOperatingActivities and us-gaap:PaymentsToAcquirePropertyPlantAndEquipment.
