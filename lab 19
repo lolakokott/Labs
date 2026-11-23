@@ -1,0 +1,99 @@
+# Lab 19 — Legend Panel
+
+## Objective
+
+Can three investor skills analyze the same 10-K financial data consistently while reaching different investment conclusions?
+
+I extended my Lab 18 Buffett analysis to include Cathie Wood and Michael Burry. All three investors use the same SEC EDGAR data, but each applies different financial checks before producing a qualitative recommendation.
+
+## Known-Answer Validation — Costco (COST)
+
+I tested the three-investor panel against Costco's known answers.
+
+| Investor | Check | Result |
+|---|---|---|
+| Buffett | ROE ≥ 15% every year | Pass |
+| Buffett | Positive owner earnings every year | Pass |
+| Buffett | Owner earnings increased | Pass |
+| Cathie Wood | Revenue CAGR ≥ 15% | Fail (7.51%) |
+| Cathie Wood | Latest R&D/revenue ≥ 5% | Not known |
+| Michael Burry | Operating cash flow ≥ net income every year | Pass |
+| Michael Burry | Latest liabilities/equity ≤ 2 | Pass (1.49×) |
+
+The Costco panel matched the expected results. R&D remained "not found" rather than being replaced with an estimate.
+
+## Cathie Wood Threshold Probe
+
+I lowered Cathie Wood's revenue-growth threshold from 15% to 5%. Costco's growth check changed from Fail to Pass, while its R&D check remained Not known.
+
+**Threshold decision:** I chose to retain the original 15% threshold because it better reflects the high-growth philosophy being modeled. Lowering the threshold simply to make Costco pass would weaken the purpose of the screen.
+
+## My Company — Apple (AAPL)
+
+I selected Apple from QQQ, one of the ETFs in my Project 2 investment universe.
+
+| Investor | Check | Result |
+|---|---|---|
+| Buffett | ROE ≥ 15% every year | Pass |
+| Buffett | Positive owner earnings every year | Pass |
+| Buffett | Owner earnings increased | Pass |
+| Cathie Wood | Revenue CAGR ≥ 15% | Fail (4.97%) |
+| Cathie Wood | Latest R&D/revenue ≥ 5% | Pass (9.56%) |
+| Michael Burry | Operating cash flow ≥ net income every year | Fail |
+| Michael Burry | Latest liabilities/equity ≤ 2 | Fail (2.61×) |
+
+### Where the Panel Agreed and Split
+
+Buffett's framework favored Apple because it passed all three profitability and owner-earnings checks. Cathie Wood recognized its R&D investment but rejected its revenue-growth rate, while Burry flagged both cash conversion and leverage concerns.
+
+The panel demonstrated that identical financial data can support different conclusions depending on which risks and financial characteristics each investor prioritizes.
+
+### Bull Case
+
+Apple's strong returns on equity and consistently positive owner earnings suggest that it can generate cash after capital spending. Its R&D intensity also passes Cathie Wood's innovation threshold, supporting the argument that Apple continues investing in future products.
+
+### Bear Case
+
+Apple's 4.97% revenue CAGR falls short of the high-growth threshold, suggesting slower expansion than Cathie Wood's framework requires. It also fails both of Burry's checks, including a 2.61× liabilities-to-equity ratio, raising concerns that warrant further review.
+
+## Numerical Validation
+
+I tested the app's unsupported-number detection by entering a fabricated 40.0% ROE claim into Cathie Wood's Apple memo. The app flagged the number as unsupported.
+
+Automated tests also checked numerical-claim detection across all three memo editors.
+
+## My Decision
+
+**I would use the panel to screen companies for Project 2, but only with conditions:** financial figures must be traceable to SEC filings, missing values must remain visible, and conflicting investor verdicts must receive further review before influencing portfolio decisions.
+
+The panel should support investment analysis rather than automatically determine allocations.
+
+## Learn — A Panel of AI Agents
+
+**1. What is a panel of AI agents?**
+
+A panel of AI agents is a group of AI workflows that evaluate the same information using different instructions, criteria, or perspectives.
+
+**2. Why can three investor personas disagree on the same facts?**
+
+Each investor prioritizes different financial characteristics. Buffett emphasizes profitability and owner earnings, Cathie Wood focuses on growth and R&D, and Burry examines cash conversion and leverage. The calculations can all be correct while the resulting verdicts differ.
+
+**3. Why does this matter?**
+
+Comparing the verdicts helps identify which aspects of a company's financial condition require additional judgment instead of relying on one perspective.
+
+## Reflection
+
+**1. Where did the panel agree and disagree?**
+
+For Apple, Buffett passed all three checks, while Cathie Wood passed the R&D check but failed revenue growth. Burry failed both of his checks. The disagreement highlighted Apple's profitability and investment in R&D alongside slower revenue growth and balance-sheet concerns under the assigned screening rules.
+
+**2. What did the threshold probe demonstrate?**
+
+The threshold probe showed that an investment screen's verdict depends partly on its design. Costco's financial performance did not change, but Cathie Wood's growth check switched from Fail to Pass when the required CAGR was lowered. This reinforced the importance of choosing and justifying thresholds before interpreting results.
+
+## Limitations
+
+The panel provides a structured financial screening framework, not a complete investment recommendation. The metrics do not incorporate purchase price, and the screening rules simplify the investors' broader philosophies.
+
+The AI-generated memos require review, particularly when multiple interpretations of the same data are possible.
