@@ -1,0 +1,58 @@
+# Lab 18 — Legend Investor as Skill
+
+## Skill and Validation
+
+I built a Buffett analysis skill that uses an SEC EDGAR Python script to retrieve five years of 10-K financial data. The script calculates ROE, owner earnings, and three Buffett checks before the AI produces a qualitative recommendation.
+
+I tested the script and Streamlit application against Costco's known answers. All five years of financial figures matched, and all three Buffett checks passed.
+
+I also tested two edge cases:
+
+- **JPM:** Capital expenditures and owner earnings returned "not found," while both owner-earnings checks returned "not known."
+- **COST:** Manually adding a fabricated ROE of 40.0% to the memo triggered an unsupported-number warning.
+
+The numerical checker initially flagged legitimate references to the 15% screening hurdle and Lab 18. I corrected these false positives and verified that the fabricated ROE was still flagged.
+
+## Buffett's Memo and My Decision
+
+**Recommendation: Own the business.**
+
+**My decision:** I trust Buffett's verdict as a business-quality assessment because Costco passed all three checks using financial figures calculated from its filings. However, I would not treat the result as an automatic decision to buy the stock. The checks do not account for the purchase price or all the qualitative factors that could affect the investment.
+
+## Fresh No-Skill Comparison
+
+I ran a separate Costco analysis without using my custom Buffett skill. Both approaches recommended owning the business, but the supporting analysis differed.
+
+The custom skill followed a consistent five-year framework and explicitly calculated the three Buffett checks. The no-skill analysis provided more business-specific context, including Costco's membership renewals, membership fees, and competitive advantages. However, it did not provide all five annual ROE values or evaluate the three checks in the same structured manner.
+
+The main benefit of the skill was consistency and reproducibility rather than a different recommendation. The no-skill analysis was more detailed qualitatively, while the skill made the financial calculations easier to trace and verify.
+
+## Agent Skills — Learn
+
+**1. What is an agent skill?**
+
+An agent skill is a reusable set of instructions and supporting resources that tells an AI how to perform a specific task consistently.
+
+**2. How does it work?**
+
+A skill has a `SKILL.md` file containing its name, description, and instructions. The AI can use the name and description to determine whether the skill is relevant, then read the full instructions and supporting files when needed. This avoids loading every skill's full contents for every task.
+
+**3. Why do the numbers belong in code rather than the model?**
+
+Code applies the same formulas and data-selection rules every time, making calculations reproducible and easier to audit. The model is better suited to interpreting those results and making a qualitative judgment, but it should not invent financial figures.
+
+## Reflection
+
+**1. What does the skill make consistent, and what does it leave to the model?**
+
+The skill standardizes the data source, financial metrics, formulas, five-year selection, and Buffett checks. The model is responsible for interpreting those results and explaining whether the business meets the investment philosophy. Different analyses could still reach different judgments, but they should use the same underlying calculations.
+
+**2. Why is "not found" better than an estimate?**
+
+"Not found" makes a data limitation visible rather than presenting an unsupported estimate as fact. JPM demonstrated why this matters: without capital-spending data, the script cannot reliably calculate owner earnings. Reporting "not known" prevents an incomplete calculation from being treated as a valid investment signal.
+
+## What I Learned
+
+The biggest challenge was separating reliable calculations from AI judgment. Codex initially could not access SEC EDGAR, so I supplied results that I had successfully generated and verified locally.
+
+I also learned that validation tools need testing themselves. The numerical checker initially rejected legitimate text, even though the financial figures were correct. Fixing those false positives while preserving the warning for fabricated figures showed why both positive and negative test cases matter.
