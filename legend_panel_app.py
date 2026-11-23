@@ -1,5 +1,6 @@
 """Streamlit panel for three educational analysis lenses on one EDGAR report."""
 
+from datetime import datetime
 from functools import partial
 import importlib.util
 import os
@@ -70,7 +71,27 @@ def numeric_report(edgar, rows, growth):
     return "\n".join([*lines, "", "Source XBRL tags"])
 
 
-def unsupported_numbers(lab18, memo, report):
+LAB19_REFERENCE = re.compile(r"\bLab\s+19\s+Legend Panel\b", re.IGNORECASE)
+BUFFETT_THRESHOLD = re.compile(
+    r"\bROE\s+of\s+at least\s+15\s*%\s+every fiscal year\b", re.IGNORECASE
+)
+WRITTEN_DATE = re.compile(
+    r"\b(?:January|February|March|April|May|June|July|August|September|October|November|December)"
+    r" [0-9]{1,2}, [0-9]{4}\b",
+    re.IGNORECASE,
+)
+
+
+def date_as_iso(match):
+    try:
+        return datetime.strptime(match.group(), "%B %d, %Y").date().isoformat()
+    except ValueError:
+        return match.group()
+
+
+def unsupported_numbers(
+    lab18, memo, report, *, investor=None, growth_threshold=financials.DEFAULT_GROWTH_THRESHOLD
+):
     """Reuse Lab 18 amount and percent validation, adding tagged ratio multiples."""
     allowed = {
         lab18.numeric_value(match) for match in lab18.NUMBER.finditer(report)
@@ -80,6 +101,24 @@ def unsupported_numbers(lab18, memo, report):
         lambda match: " " if match["unit"] in ("×", "x") else match.group(), report
     )
     prose = re.sub(r"\bFY(?=\d{4}\b)", "", memo, flags=re.IGNORECASE)
+    prose = re.sub(r"[*_`]", "", prose)
+    prose = WRITTEN_DATE.sub(date_as_iso, prose)
+    prose = LAB19_REFERENCE.sub(" ", prose)
+    prose = re.sub(r"\b10-K\b", " ", prose)
+    prose = BUFFETT_THRESHOLD.sub(" ", prose)
+    if investor == "Cathie Wood":
+        growth_cutoff = re.escape(f"{growth_threshold * 100:g}%")
+        rd_cutoff = re.escape(f"{financials.RD_THRESHOLD:.0%}")
+        prose = re.sub(
+            rf"\bbelow the panel[’']s\s+{growth_cutoff}\s+(?:revenue growth\s+)?threshold\b"
+            rf"|\babove the panel[’']s\s+{rd_cutoff}\s+(?:R&D\s+)?threshold\b",
+            " ", prose, flags=re.IGNORECASE,
+        )
+    elif investor == "Michael Burry":
+        prose = re.sub(
+            rf"\bexceeded its\s+{financials.LIABILITIES_LIMIT}×\s+ceiling\b",
+            " ", prose, flags=re.IGNORECASE,
+        )
     rejected = lab18.unsupported_claims(prose, amounts_and_percentages)
     return [
         token for token in rejected
@@ -186,7 +225,9 @@ def main():
                 st.session_state[memo_key] = draft
             st.session_state[draft_key] = draft
             memo = st.text_area("Memo Markdown", height=225, key=memo_key)
-            claims = unsupported_numbers(lab18, memo, report)
+            claims = unsupported_numbers(
+                lab18, memo, report, investor=investor, growth_threshold=threshold
+            )
             if claims:
                 st.warning("Unsupported numerical claims: " + ", ".join(claims))
             st.markdown(memo)
